@@ -111,6 +111,15 @@ Control and bulk transfers need write access to `/dev/bus/usb/*`: run as root, o
 udev rule for the target VID:PID. Note that a vendor device often changes VID:PID when it
 switches USB modes, so match on all of the identities it can present.
 
+Pick the library by what owns the device. `pyusb` needs an interface no driver has claimed,
+which in practice means vendor-specific interfaces (`bInterfaceClass 0xff`). For anything the
+OS has a class driver for, go through that class instead: `hid` for HID devices, `serial` for
+CDC and Bluetooth SPP, `bleak` for BLE. On darwin that is not just a preference. libusb there
+implements no kernel-driver detach and there is no `usbfs`, so a claimed interface stays
+claimed, and darwin also exposes no USB traffic capture at all. Raw transfers to a
+class-claimed device, or any `usbmon`-style capture, mean passing the device through to a Linux
+VM.
+
 ### Password / Hash Cracking
 
 Wordlists and rules are exposed as a stable dir-of-symlinks at `wordlists/` in the repo root (gitignored, points into the Nix store) so no `/nix/store` spelunking is needed. Contents: `wordlists/rockyou.txt`, `wordlists/seclists/` (full SecLists tree), `wordlists/best64.rule`, `wordlists/hashcat-rules/`, `wordlists/john-rules/`, `wordlists/john-password.lst`. To add more, edit the `wordlists` linkFarm in `flake.nix`.
@@ -223,6 +232,9 @@ Python dependencies are managed via `pyproject.toml` and `uv.lock`, built into a
 | SciPy | `import scipy` | Scientific computing (FFT, signal processing, optimization) |
 | Pillow | `from PIL import Image` | Image loading/manipulation (extracted textures, QR, framebuffers) |
 | pyusb | `import usb.core` | Raw USB control/bulk/interrupt transfers (see [USB](#usb) for the libusb backend) |
+| hidapi | `import hid` | HID report I/O through the OS HID stack (IOHIDManager on darwin, hidraw on Linux); works on devices the kernel has claimed |
+| pyserial | `import serial` | Serial I/O, including USB-CDC dongles and Bluetooth Classic SPP devices, which darwin exposes as `/dev/cu.*` |
+| bleak | `import bleak` | BLE GATT central: scan, connect, read/write/notify. The only route to BLE on darwin, where CoreBluetooth hides everything below GATT |
 | capstone | `import capstone` | Disassembler for x86, x64, ARM, ARM64, MIPS, and more; disassemble a few bytes without a Ghidra run |
 | cryptography | `from cryptography.hazmat.primitives.asymmetric...` | Signature and cipher primitives (Ed25519, ECDSA, RSA, AES) for firmware signature checks |
 
