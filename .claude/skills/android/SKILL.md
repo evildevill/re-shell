@@ -11,6 +11,17 @@ description: >
 
 This skill covers Android-specific RE tools available in the dev shell. For general-purpose tools (Ghidra, radare2, rizin, binwalk, Frida, YARA, mitmproxy, etc.), see `CLAUDE.md`.
 
+## Obtaining an APK
+
+| Tool | Command | Description |
+|------|---------|-------------|
+| apkeep | `apkeep -a com.example.app -d apk-pure .` | Download an APK or XAPK by package name; `-d` picks the source (`apk-pure`, `google-play`, `f-droid`) |
+
+A split APK arrives as a `.xapk`, which is a zip of one base APK plus per-ABI and
+per-density configs. Native libraries are in the config APK, not the base:
+`unzip app.xapk -d xapk` then `unzip xapk/config.arm64_v8a.apk 'lib/*'`. The dex
+is in the base APK. `google-play` needs credentials, `apk-pure` does not.
+
 ## APK Disassembly & Manipulation
 
 | Tool | Command | Description |

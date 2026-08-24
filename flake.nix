@@ -167,7 +167,10 @@
               # --- General: utilities ---
               pkgs.unzip # ZIP extraction
               pkgs.p7zip # 7-Zip archive tool
-              pkgs.binutils # strings/nm/objdump/readelf (otherwise only incidental, via stdenv)
+              # all-targets, not pkgs.binutils: the wrapped build's objdump knows only the
+              # host arch, and Ghidra has no Xtensa module at all, so this is the only
+              # disassembler here that reads ESP32 firmware. Same 12 binaries, superset.
+              pkgs.binutils-unwrapped-all-targets # strings/nm/objdump/readelf, every BFD target
               pkgs.file # File type identification
               pkgs.curl # HTTP client (fetching firmware packages, vendor manifests)
               pkgs.jq # JSON processor
@@ -203,6 +206,12 @@
               pkgs.pico-sdk # Raspberry Pi Pico SDK (PICO_SDK_PATH set in env)
               pkgs.cmake # Build system for pico-sdk projects
               pkgs.gcc-arm-embedded # arm-none-eabi-gcc cross toolchain
+
+              # --- General: embedded / ESP32 (Espressif) firmware ---
+              pkgs.esptool # esptool/espsecure/espefuse: parse ESP32 images, check signatures and eFuses
+
+              # --- Android: APK acquisition ---
+              pkgs.apkeep # Download APKs/XAPKs by package name (APKPure, Google Play, F-Droid)
 
               # --- Android: APK disassembly & manipulation ---
               pkgs.apktool # Decode/rebuild APKs (resources, smali)
