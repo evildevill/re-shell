@@ -75,7 +75,12 @@
       devShells = eachSystem (
         pkgs:
         let
-          python = pkgs.python3;
+          # Pinned rather than pkgs.python3: uv.lock is resolved against one
+          # interpreter version and sourcePreference is "wheel", so the locked
+          # wheels only match if the python stays put. Taking the nixpkgs default
+          # would break every consumer whose nixpkgs defaults to something else.
+          # Bumping this means re-resolving uv.lock for the new version.
+          python = pkgs.python313;
 
           # Build Node.js dependencies from package-lock.json
           nodeModules = pkgs.importNpmLock.buildNodeModules {
