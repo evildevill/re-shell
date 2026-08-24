@@ -311,6 +311,13 @@ uv add protobuf
 direnv reload
 ```
 
+`uv.lock` is resolved against one specific Python version, and `sourcePreference = "wheel"`
+means uv2nix installs the wheels named in it. So the lock and the `nixpkgs` pin are coupled: if
+something makes this flake's nixpkgs follow a different one whose `python3` is a different minor
+version, the locked wheels no longer match and uv2nix falls back to building sdists, which fails
+for any package that under-declares its build dependencies. Consuming this flake from another
+one, do not override its nixpkgs input.
+
 For temporary/one-off usage without modifying the project, use `uv run`:
 
 ```sh
