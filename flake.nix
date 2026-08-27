@@ -179,15 +179,9 @@
               pkgs.innoextract # Extract Inno Setup installers (common for FW update tools)
               pkgs.asar # Pack/unpack Electron app.asar archives
 
-              # --- General: display / monitor firmware ---
-              pkgs.v4l-utils # provides edid-decode (parse/validate EDID + CTA/DisplayID exts)
-              pkgs.ddcutil # Query/set monitor settings over DDC/CI (VCP codes)
-              pkgs.i2c-tools # i2ctransfer/i2cdetect - raw DDC/CI frames (needed for 16-bit VCP codes)
-
               # --- General: USB ---
               pkgs.libusb1 # libusb-1.0 backend for pyusb (raw control/bulk transfers)
               pkgs.usbutils # lsusb -v for descriptor dumps, usbhid-dump for HID descriptors
-              pkgs.hid-tools # hid-decode/hid-recorder/hid-replay - parse and record HID reports
 
               # --- General: password / hash cracking ---
               pkgs.hashcat # GPU/CPU password recovery
@@ -234,11 +228,8 @@
               pkgs.simg2img # Sparse image to raw image converter
               pkgs.sdat2img # .dat sparse data to ext4 image converter
               pkgs.payload-dumper-go # Extract partitions from Android OTA payloads
-              pkgs.imgpatchtools # Manipulate Android OTA archives
 
               # --- Windows: PE analysis & inspection ---
-              pkgs.pe-bear # GUI PE viewer for headers, sections, imports, exports
-              pkgs.detect-it-easy # Identify compilers, packers, protectors (diec)
               pkgs.imhex # Hex editor with pattern language and PE templates
 
               # --- Windows: .NET decompilation ---
@@ -260,7 +251,6 @@
               pkgs.osslsigncode # Verify/manipulate Authenticode signatures on PE files
 
               # --- Windows: running Windows binaries ---
-              pkgs.wineWow64Packages.stable # Wine, 64-bit build that also runs 32-bit binaries
               pkgs.winetricks # Install DLLs/runtimes and tweak Wine prefixes
 
               # --- Web: protocol buffers & gRPC ---
@@ -278,6 +268,17 @@
 
               # --- Web: HTML parsing ---
               pkgs.pup # CLI HTML parser (like jq for HTML)
+            ]
+            ++ lib.optionals pkgs.stdenv.isLinux [
+              # Linux-only: need the kernel i2c-dev interface (/dev/i2c-*), not available on Darwin.
+              pkgs.v4l-utils # provides edid-decode (parse/validate EDID + CTA/DisplayID exts)
+              pkgs.ddcutil # Query/set monitor settings over DDC/CI (VCP codes)
+              pkgs.i2c-tools # i2ctransfer/i2cdetect - raw DDC/CI frames (needed for 16-bit VCP codes)
+              pkgs.hid-tools # hid-decode/hid-recorder/hid-replay - depends on libevdev (Linux-only)
+              pkgs.imgpatchtools # Manipulate Android OTA archives (not packaged for Darwin)
+              pkgs.pe-bear # GUI PE viewer for headers, sections, imports, exports (not packaged for Darwin)
+              pkgs.detect-it-easy # Identify compilers, packers, protectors (diec) (not packaged for Darwin)
+              pkgs.wineWow64Packages.stable # Wine, 64-bit build that also runs 32-bit binaries (no nixpkgs wine variant builds on Darwin)
             ];
 
             npmDeps = nodeModules;
