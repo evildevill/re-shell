@@ -43,6 +43,14 @@ Never leave tool output in the repo root or in ad-hoc directories outside these 
 
 The dev shell is defined in `flake.nix` and organized into tool categories. Python dependencies are declared in `pyproject.toml`, locked by `uv.lock`, and built into a Nix virtualenv via [uv2nix](https://github.com/pyproject-nix/uv2nix). Node.js dependencies are declared in `package.json`, locked by `package-lock.json`, and built via `importNpmLock`; bin scripts from npm packages are automatically on PATH. Ghidra's JDK is configured via `GHIDRA_JAVA_HOME`.
 
+`flake.nix` splits the shell into `tools` (the toolchain), `devTools` (formatter and npm link
+hook, dev-shell only), and `envVars` (the environment the tools need anywhere). Three outputs
+fall out of that: `devShells.default` as before, `packages.re-tools` -- a `buildEnv` of the
+whole toolchain, for `nix profile install` or for another flake to pull in without the shell --
+and `lib.<system>.envVars`, the environment `re-tools` expects. Installing `re-tools` alone
+gets the binaries but not `GHIDRA_INSTALL_DIR` or `LIBUSB1_SO`, so a consumer must set
+`envVars` itself; pyghidra and pyusb both fail without them.
+
 ## Installed Tools (General-Purpose)
 
 Discipline-specific tools are documented in their respective skill files. The tools below are available across all RE disciplines.
