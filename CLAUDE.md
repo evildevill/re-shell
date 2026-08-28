@@ -43,6 +43,14 @@ Never leave tool output in the repo root or in ad-hoc directories outside these 
 
 The dev shell is defined in `flake.nix` and organized into tool categories. Python dependencies are declared in `pyproject.toml`, locked by `uv.lock`, and built into a Nix virtualenv via [uv2nix](https://github.com/pyproject-nix/uv2nix). Node.js dependencies are declared in `package.json`, locked by `package-lock.json`, and built via `importNpmLock`; bin scripts from npm packages are automatically on PATH. Ghidra's JDK is configured via `GHIDRA_JAVA_HOME`.
 
+`flake.nix` splits the shell into `tools` (the toolchain), `devTools` (formatter and npm link
+hook, dev-shell only), and `envVars` (the environment the tools need anywhere). Three outputs
+fall out of that: `devShells.default` as before, `packages.re-tools` -- a `buildEnv` of the
+whole toolchain, for `nix profile install` or for another flake to pull in without the shell --
+and `lib.<system>.envVars`, the environment `re-tools` expects. Installing `re-tools` alone
+gets the binaries but not `GHIDRA_INSTALL_DIR` or `LIBUSB1_SO`, so a consumer must set
+`envVars` itself; pyghidra and pyusb both fail without them.
+
 ## Installed Tools (General-Purpose)
 
 Discipline-specific tools are documented in their respective skill files. The tools below are available across all RE disciplines.
@@ -111,6 +119,15 @@ Control and bulk transfers need write access to `/dev/bus/usb/*`: run as root, o
 udev rule for the target VID:PID. Note that a vendor device often changes VID:PID when it
 switches USB modes, so match on all of the identities it can present.
 
+Pick the library by what owns the device. `pyusb` needs an interface no driver has claimed,
+which in practice means vendor-specific interfaces (`bInterfaceClass 0xff`). For anything the
+OS has a class driver for, go through that class instead: `hid` for HID devices, `serial` for
+CDC and Bluetooth SPP, `bleak` for BLE. On darwin that is not just a preference. libusb there
+implements no kernel-driver detach and there is no `usbfs`, so a claimed interface stays
+claimed, and darwin also exposes no USB traffic capture at all. Raw transfers to a
+class-claimed device, or any `usbmon`-style capture, mean passing the device through to a Linux
+VM.
+
 ### Password / Hash Cracking
 
 Wordlists and rules are exposed as a stable dir-of-symlinks at `wordlists/` in the repo root (gitignored, points into the Nix store) so no `/nix/store` spelunking is needed. Contents: `wordlists/rockyou.txt`, `wordlists/seclists/` (full SecLists tree), `wordlists/best64.rule`, `wordlists/hashcat-rules/`, `wordlists/john-rules/`, `wordlists/john-password.lst`. To add more, edit the `wordlists` linkFarm in `flake.nix`.
@@ -158,6 +175,27 @@ takes under a second, proving the right one may not finish.
 | cmake | `cmake -B build` | Build system for pico-sdk projects |
 | gcc-arm-embedded | `arm-none-eabi-gcc` | ARM cross toolchain (`arm-none-eabi-{gcc,objcopy,gdb,...}`) |
 
+### Embedded / ESP32 (Espressif) Firmware
+
+esptool is v5, whose subcommands are hyphenated (`image-info`, not the v4
+`image_info`); most guides online still show the v4 spelling.
+
+| Tool | Command | Description |
+|------|---------|-------------|
+| esptool | `esptool image-info app.bin` | Parse an ESP32 image: chip target, entry point, segment table, SHA-256 and checksum, plus the app description (version string, IDF version, compile date) |
+| esptool | `esptool --chip esp32 elf2image app.elf` | Convert an ELF into the flashable image format; `image-info` reads it back |
+| espsecure | `espsecure signature-info-v2 app.bin` | Read an appended secure-boot v2 signature block without needing the key |
+| espsecure | `espsecure verify-signature -v 2 -k pub.pem app.bin` | Verify a secure-boot signature against a public key |
+| espefuse | `espefuse --port /dev/ttyUSB0 summary` | Read the eFuse block: secure boot and flash encryption state, key readout protection |
+
+`image-info`, `elf2image` and both `espsecure` commands above are pure file
+operations. Only `espefuse` and flash access need hardware in download mode.
+
+Xtensa is the reason `binutils-unwrapped-all-targets` is in the shell. ESP32 and
+ESP32-S2/S3 are Xtensa LX6/LX7, which Ghidra cannot disassemble at all, and only
+the ESP32-C and -H parts are RISC-V. Disassemble a raw flash dump with
+`objdump -D -b binary -m xtensa`, and check `objdump --info` for the target list.
+
 ### Network Interception and Discovery
 
 | Tool | Command | Description |
@@ -181,7 +219,7 @@ unknown. `avahi-browse` needs the avahi daemon on the host
 |------|---------|-------------|
 | UPX | `upx -d packed.exe` | Decompress executables packed with UPX |
 | xxd | `xxd binary` | Hex dump / reverse hex dump utility |
-| binutils | `strings -n 8 file`, `nm`, `objdump`, `readelf` | Read strings, symbols, and ELF structure |
+| binutils | `strings -n 8 file`, `nm`, `objdump`, `readelf` | Read strings, symbols, and ELF structure. Built `--enable-targets=all`, so `objdump -m` reaches Xtensa, RISC-V, MIPS and AVR, not just the host arch |
 | exiftool | `exiftool file` | Read/write embedded metadata (images, documents, firmware) |
 | innoextract | `innoextract -e -d out setup.exe` | Extract Inno Setup installers (common packaging for vendor firmware update tools) |
 | asar | `asar extract app.asar tmp/app/` | Unpack Electron `app.asar` archives (`asar list` to inspect first) |
@@ -202,6 +240,9 @@ Python dependencies are managed via `pyproject.toml` and `uv.lock`, built into a
 | SciPy | `import scipy` | Scientific computing (FFT, signal processing, optimization) |
 | Pillow | `from PIL import Image` | Image loading/manipulation (extracted textures, QR, framebuffers) |
 | pyusb | `import usb.core` | Raw USB control/bulk/interrupt transfers (see [USB](#usb) for the libusb backend) |
+| hidapi | `import hid` | HID report I/O through the OS HID stack (IOHIDManager on darwin, hidraw on Linux); works on devices the kernel has claimed |
+| pyserial | `import serial` | Serial I/O, including USB-CDC dongles and Bluetooth Classic SPP devices, which darwin exposes as `/dev/cu.*` |
+| bleak | `import bleak` | BLE GATT central: scan, connect, read/write/notify. The only route to BLE on darwin, where CoreBluetooth hides everything below GATT |
 | capstone | `import capstone` | Disassembler for x86, x64, ARM, ARM64, MIPS, and more; disassemble a few bytes without a Ghidra run |
 | cryptography | `from cryptography.hazmat.primitives.asymmetric...` | Signature and cipher primitives (Ed25519, ECDSA, RSA, AES) for firmware signature checks |
 
@@ -289,6 +330,13 @@ uv add protobuf
 # Rebuild the Nix environment with the new dependency
 direnv reload
 ```
+
+`uv.lock` is resolved against one specific Python version, and `sourcePreference = "wheel"`
+means uv2nix installs the wheels named in it. So the lock and the `nixpkgs` pin are coupled: if
+something makes this flake's nixpkgs follow a different one whose `python3` is a different minor
+version, the locked wheels no longer match and uv2nix falls back to building sdists, which fails
+for any package that under-declares its build dependencies. Consuming this flake from another
+one, do not override its nixpkgs input.
 
 For temporary/one-off usage without modifying the project, use `uv run`:
 

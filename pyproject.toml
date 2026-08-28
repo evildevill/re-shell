@@ -29,6 +29,9 @@ dependencies = [
     "grpcio-tools",
     "haralyzer",
     "protobuf",
+    "bleak>=3.0.2",
+    "pyserial>=3.5",
+    "hidapi>=0.15.0",
 ]
 
 [build-system]
