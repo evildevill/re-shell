@@ -4,6 +4,12 @@ A Nix flake-based reverse engineering environment designed for use with [Claude 
 
 ## Quick start
 
+Make sure `flakes` and `nix-command` experimental features are on. If not, add to your nix config file:
+
+```sh
+echo "experimental-features = nix-command flakes" | sudo tee -a /etc/nix/nix.conf
+```
+
 ```sh
 # Enter the environment (or use direnv)
 nix develop
