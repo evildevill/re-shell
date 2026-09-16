@@ -1,9 +1,6 @@
 ---
 name: windows-re
-description: >
-  Windows reverse engineering tools and workflows. Auto-activates when context involves
-  PE files, .exe, .dll, .sys, .NET assemblies, Windows drivers, Windows malware,
-  x86/x64 Windows binaries, or Windows-specific analysis.
+description: Windows reverse engineering tools and workflows. Auto-activates when context involves PE files, .exe, .dll, .sys, .NET assemblies, Windows drivers, Windows malware, x86/x64 Windows binaries, or Windows-specific analysis.
 ---
 
 # Windows Reverse Engineering

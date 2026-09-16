@@ -1,9 +1,9 @@
 {
   "name": "re-shell",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Agent-neutral reverse-engineering workflows backed by a reproducible Nix toolchain.",
   "author": {
-    "name": "re-shell contributors"
+    "name": "MUHAMMAD WASEEM AKRAM"
   },
   "repository": "https://github.com/evildevill/re-shell"
 }

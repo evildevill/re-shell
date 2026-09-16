@@ -1,9 +1,6 @@
 ---
 name: web-re
-description: >
-  Web reverse engineering tools and workflows. Auto-activates when context involves
-  protobuf, gRPC, HAR files, HTTP API analysis, WebSocket, web scraping, TLS fingerprinting,
-  curl-impersonate, or web protocol reverse engineering.
+description: Web reverse engineering tools and workflows. Auto-activates when context involves protobuf, gRPC, HAR files, HTTP API analysis, WebSocket, web scraping, TLS fingerprinting, curl-impersonate, or web protocol reverse engineering.
 ---
 
 # Web Reverse Engineering

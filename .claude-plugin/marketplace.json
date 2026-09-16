@@ -1,18 +1,18 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
   "name": "re-shell",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Agent-neutral reverse-engineering workflows and Nix toolchain.",
   "owner": {
-    "name": "re-shell contributors"
+    "name": "MUHAMMAD WASEEM AKRAM"
   },
   "plugins": [
     {
       "name": "re-shell",
       "description": "Agent-neutral reverse-engineering workflows backed by a reproducible Nix toolchain.",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "author": {
-        "name": "re-shell contributors"
+        "name": "MUHAMMAD WASEEM AKRAM"
       },
       "source": "./",
       "category": "development"

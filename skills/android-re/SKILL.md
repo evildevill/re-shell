@@ -1,9 +1,6 @@
 ---
 name: android-re
-description: >
-  Android reverse engineering tools and workflows. Auto-activates when context involves
-  APK files, DEX bytecode, smali, Android manifests, ADB, Android apps, Java decompilation,
-  or Android-specific analysis.
+description: Android reverse engineering tools and workflows. Auto-activates when context involves APK files, DEX bytecode, smali, Android manifests, ADB, Android apps, Java decompilation, or Android-specific analysis.
 ---
 
 # Android Reverse Engineering

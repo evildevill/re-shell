@@ -1,9 +1,9 @@
 {
   "name": "re-shell",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Agent-neutral reverse-engineering workflows backed by a reproducible Nix toolchain.",
   "author": {
-    "name": "re-shell contributors",
+    "name": "MUHAMMAD WASEEM AKRAM",
     "url": "https://github.com/evildevill"
   },
   "homepage": "https://github.com/evildevill/re-shell",
@@ -14,7 +14,7 @@
     "displayName": "RE Shell",
     "shortDescription": "Agentic reverse-engineering workbench",
     "longDescription": "Portable Agent Skills for binary, firmware, Android, Windows, web, and protocol analysis with a reproducible Nix toolchain.",
-    "developerName": "re-shell contributors",
+    "developerName": "MUHAMMAD WASEEM AKRAM",
     "category": "Developer Tools",
     "capabilities": ["Analysis", "Local tools", "Artifacts"],
     "websiteURL": "https://github.com/evildevill/re-shell",
@@ -23,6 +23,8 @@
       "Analyze this firmware image and document its update path.",
       "Inspect this capture and reconstruct the protocol."
     ],
-    "brandColor": "#1F6FEB"
+    "brandColor": "#071426",
+    "composerIcon": "./assets/re-shell-icon.png",
+    "logo": "./assets/re-shell-icon.png"
   }
 }
