@@ -1,5 +1,5 @@
 {
-  description = "Reverse engineering environment";
+  description = "Agent-neutral reverse engineering environment";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
@@ -364,7 +364,7 @@
                 *-Djava.io.tmpdir=*) ;; # already set (nested shell, or the user's own choice)
                 *) export _JAVA_OPTIONS="-Djava.io.tmpdir=$PWD/tmp/jtmp''${_JAVA_OPTIONS:+ $_JAVA_OPTIONS}" ;;
               esac
-              echo "RE environment loaded. See CLAUDE.md and .claude/skills/ for tool documentation."
+              echo "RE environment loaded. See AGENTS.md and skills/ for workflows."
             '';
           };
         }

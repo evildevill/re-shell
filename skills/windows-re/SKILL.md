@@ -1,6 +1,5 @@
 ---
 name: windows-re
-user-invocable: false
 description: >
   Windows reverse engineering tools and workflows. Auto-activates when context involves
   PE files, .exe, .dll, .sys, .NET assemblies, Windows drivers, Windows malware,
@@ -9,7 +8,7 @@ description: >
 
 # Windows Reverse Engineering
 
-This skill covers Windows-specific RE tools available in the dev shell. For general-purpose tools (Ghidra, radare2, rizin, binwalk, Frida, YARA, mitmproxy, etc.), see `CLAUDE.md`.
+This skill covers Windows-specific RE tools available in the dev shell. For shared tools and artifact conventions, use `skills/general-re/SKILL.md`.
 
 ## PE Analysis & Inspection
 
@@ -233,4 +232,4 @@ mu.emu_start(0x1000, 0x1000 + len(code_bytes))
 - `retdec` (RetDec decompiler) is not currently installed but is available in nixpkgs (`pkgs.retdec`). It consumes significant memory; use Ghidra's decompiler for most analysis.
 - Volatility 3 plugins are under the `windows.` namespace for Windows memory analysis. Use `vol --help` to list all available plugins.
 - `oletools` provides both Python APIs and CLI entry points (`olevba`, `oleid`, `rtfobj`, etc.) for analyzing Office/OLE documents.
-- `unicorn` is general-purpose but particularly useful for Windows x86/x64 shellcode and malware analysis. `capstone` is documented in `CLAUDE.md` with the other general-purpose Python libraries.
+- `unicorn` is general-purpose but particularly useful for Windows x86/x64 shellcode and malware analysis. `capstone` is documented in `skills/general-re/SKILL.md` with the other general-purpose Python libraries.

@@ -1,0 +1,28 @@
+{
+  "name": "re-shell",
+  "version": "1.0.0",
+  "description": "Agent-neutral reverse-engineering workflows backed by a reproducible Nix toolchain.",
+  "author": {
+    "name": "re-shell contributors",
+    "url": "https://github.com/schlarpc/re-shell"
+  },
+  "homepage": "https://github.com/schlarpc/re-shell",
+  "repository": "https://github.com/schlarpc/re-shell",
+  "keywords": ["reverse-engineering", "binary-analysis", "firmware", "android", "malware", "nix"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "RE Shell",
+    "shortDescription": "Agentic reverse-engineering workbench",
+    "longDescription": "Portable Agent Skills for binary, firmware, Android, Windows, web, and protocol analysis with a reproducible Nix toolchain.",
+    "developerName": "re-shell contributors",
+    "category": "Developer Tools",
+    "capabilities": ["Analysis", "Local tools", "Artifacts"],
+    "websiteURL": "https://github.com/schlarpc/re-shell",
+    "defaultPrompt": [
+      "Triage this binary and create an evidence-backed report.",
+      "Analyze this firmware image and document its update path.",
+      "Inspect this capture and reconstruct the protocol."
+    ],
+    "brandColor": "#1F6FEB"
+  }
+}

@@ -1,6 +1,5 @@
 ---
 name: web-re
-user-invocable: false
 description: >
   Web reverse engineering tools and workflows. Auto-activates when context involves
   protobuf, gRPC, HAR files, HTTP API analysis, WebSocket, web scraping, TLS fingerprinting,
@@ -9,7 +8,7 @@ description: >
 
 # Web Reverse Engineering
 
-This skill covers web-specific RE tools available in the dev shell. For general-purpose tools (mitmproxy, tshark, jq, etc.), see `CLAUDE.md`.
+This skill covers web-specific RE tools available in the dev shell. For shared tools and artifact conventions, use `skills/general-re/SKILL.md`.
 
 ## Protocol Buffers & gRPC
 

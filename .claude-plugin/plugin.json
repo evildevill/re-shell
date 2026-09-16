@@ -1,0 +1,9 @@
+{
+  "name": "re-shell",
+  "version": "1.0.0",
+  "description": "Agent-neutral reverse-engineering workflows backed by a reproducible Nix toolchain.",
+  "author": {
+    "name": "re-shell contributors"
+  },
+  "repository": "https://github.com/schlarpc/re-shell"
+}

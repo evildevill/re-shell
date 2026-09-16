@@ -1,6 +1,5 @@
 ---
 name: android-re
-user-invocable: false
 description: >
   Android reverse engineering tools and workflows. Auto-activates when context involves
   APK files, DEX bytecode, smali, Android manifests, ADB, Android apps, Java decompilation,
@@ -9,7 +8,7 @@ description: >
 
 # Android Reverse Engineering
 
-This skill covers Android-specific RE tools available in the dev shell. For general-purpose tools (Ghidra, radare2, rizin, binwalk, Frida, YARA, mitmproxy, etc.), see `CLAUDE.md`.
+This skill covers Android-specific RE tools available in the dev shell. For shared tools and artifact conventions, use `skills/general-re/SKILL.md`.
 
 ## Obtaining an APK
 
