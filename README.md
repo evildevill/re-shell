@@ -71,7 +71,7 @@ Generated scratch work belongs in `tmp/`; requested durable deliverables belong 
 | `ghidra-workflows` | Repeatable Ghidra/PyGhidra analysis and exports |
 | `frida-workflows` | Authorized runtime observation and reusable hooks |
 
-Skills activate from their descriptions. Invoke one explicitly with the syntax supported by your agent, such as `$firmware-re` in Codex, or simply describe the task and target.
+Skills activate from their descriptions. After plugin installation, invoke one explicitly with its plugin-qualified name, such as `$re-shell:firmware-re` in Codex, or simply describe the task and target. When using the repository's skills directly rather than through the plugin, hosts may expose the unqualified name instead.
 
 ## Plugin use
 
