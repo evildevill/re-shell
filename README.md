@@ -17,7 +17,7 @@ The agent is the analyst; Nix is the workshop. RE Shell does not reimplement Ghi
 Install [Nix](https://nixos.org/download/) with flakes enabled, clone the repository, and enter the environment:
 
 ```sh
-git clone https://github.com/schlarpc/re-shell.git
+git clone git@github.com:evildevill/re-shell.git
 cd re-shell
 nix develop
 ```
